@@ -1,9 +1,4 @@
-#**Traffic Sign Recognition** 
-
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
+#**CarND-Behavioral-Cloning** 
 ---
 
 **Behavrioal Cloning Project**
@@ -35,28 +30,30 @@ The goals / steps of this project are the following:
 ####1. Submission includes all required files and can be used to run the simulator in autonomous mode
 
 My project includes the following files:
-* model.py containing the script to create and train the model
+* train_reguression.py the main script to train
+* model.py containing the script that defines different models
+* process.py implements several image processing methods for different models
+* data.py implements a DataSet class that provides a customized batch generator to model
+* config.py includes preprocessing, SDC model and training process
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
-* writeup_report.md or writeup_report.pdf summarizing the results
+* writeup.md summarizing the results
 
 ####2. Submssion includes functional code
-Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
+drive.py is modified to load the customized SDC model, the car can be driven autonomously around the track by executing 
 ```sh
-python drive.py model.h5
+python -m sdc.drive
 ```
 
 ####3. Submssion code is usable and readable
 
-The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
+The train_reguression.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
 ###Model Architecture and Training Strategy
 
 ####1. An appropriate model arcthiecture has been employed
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
-
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
+I used pre-trained VGG16 model and fine tuned the last two layers with the training data from simulator.
 
 ####2. Attempts to reduce overfitting in the model
 
@@ -70,7 +67,7 @@ The model used an adam optimizer, so the learning rate was not tuned manually (m
 
 ####4. Appropriate training data
 
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ... 
+Training data was chosen to keep the vehicle driving on the road. I used the data released from Udacity.
 
 For details about how I created the training data, see the next section. 
 
@@ -78,52 +75,27 @@ For details about how I created the training data, see the next section.
 
 ####1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+I started the project from this [github repo](https://github.com/dolaameng/Udacity-SDC_Behavior-Cloning)
 
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
+I originally tried the VGG16 pretrained approach and run the training with 20 epoches only using the center image, this model gave a pretty good starting point, but the turning steer seems to be not sharp enough and the car will drive out of the road after the bridge in the first track. I looked at the plot between the real steer angle and predict steer angle:
+![VGG16 with 20 epochs](/home/yy/git/CarND-Behavioral-Cloning/pics/inspection_vgg_ori_epoch_20.png)
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
+Then I added the left and right camera data, add 0.25 steer angle to left and minus 0.25 steer angle to right, in this case I will have more corner data. This time I run the training with 10 epoches first and the prediction is:
+![VGG16 with 10 epochs using center/left/right images](/home/yy/git/CarND-Behavioral-Cloning/pics/inspection_vgg_ori_epoch_20.png)
 
-To combat the overfitting, I modified the model so that ...
-
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+At last I trained the model with 10 more epochs:
+![VGG16 with 20 epochs using center/left/right images](/home/yy/git/CarND-Behavioral-Cloning/pics/inspection_vgg_ori_epoch_20.png)
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
 ####2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
-
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
+The final model architecture (model.py lines 77-103) consisted of a pretrained VGG16 from block5_conv3 followed with three fully connected layers with size of 4096/2048/1024 and finally converge to the prediction steer angle.
 
 ####3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
-
-![alt text][image2]
-
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
+I used the data from Udacity. I filter out the data points which speed is less than 20. 
 
 After the collection process, I had X number of data points. I then preprocessed this data by ...
 
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I added the left and right camera data into the training with a 0.25 steer degree offset. Then I mirrored all the data to get another full data set. I finally randomly shuffled the data set and put 10% of the data into a validation set and 10% of the data into a test set.
