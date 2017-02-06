@@ -78,13 +78,13 @@ For details about how I created the training data, see the next section.
 I started the project from this [github repo](https://github.com/dolaameng/Udacity-SDC_Behavior-Cloning)
 
 I originally tried the VGG16 pretrained approach and run the training with 20 epoches only using the center image, this model gave a pretty good starting point, but the turning steer seems to be not sharp enough and the car will drive out of the road after the bridge in the first track. I looked at the plot between the real steer angle and predict steer angle:
-![VGG16 with 20 epochs](/home/yy/git/CarND-Behavioral-Cloning/pics/inspection_vgg_ori_epoch_20.png)
+![VGG16 with 20 epochs using only center images](https://github.com/yyporsche/CarND-Behavioral-Cloning/blob/master/pics/inspection_vgg_ori_epoch_20.png)
 
 Then I added the left and right camera data, add 0.25 steer angle to left and minus 0.25 steer angle to right, in this case I will have more corner data. This time I run the training with 10 epoches first and the prediction is:
-![VGG16 with 10 epochs using center/left/right images](/home/yy/git/CarND-Behavioral-Cloning/pics/inspection_vgg_ori_epoch_20.png)
+![VGG16 with 10 epochs using center/left/right images](https://github.com/yyporsche/CarND-Behavioral-Cloning/blob/master/pics/inspection_vgg_addsideimage_epoch_10.png)
 
 At last I trained the model with 10 more epochs:
-![VGG16 with 20 epochs using center/left/right images](/home/yy/git/CarND-Behavioral-Cloning/pics/inspection_vgg_ori_epoch_20.png)
+![VGG16 with 20 epochs using center/left/right images](https://github.com/yyporsche/CarND-Behavioral-Cloning/blob/master/pics/inspection_vgg_addsideimage_epoch_20.png)
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
