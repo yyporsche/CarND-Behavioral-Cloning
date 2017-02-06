@@ -10,17 +10,6 @@ The goals / steps of this project are the following:
 * Test that the model successfully drives around track one without leaving the road
 * Summarize the results with a written report
 
-
-[//]: # (Image References)
-
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
-
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
@@ -57,13 +46,13 @@ I used pre-trained VGG16 model and fine tuned the last two layers with the train
 
 ####2. Attempts to reduce overfitting in the model
 
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
+The model contains dropout layers in order to reduce overfitting (model.py lines 91/93/96). 
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting (train_reguression.py lines 52-75). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 ####3. Model parameter tuning
 
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
+The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 192).
 
 ####4. Appropriate training data
 
@@ -94,8 +83,4 @@ The final model architecture (model.py lines 77-103) consisted of a pretrained V
 
 ####3. Creation of the Training Set & Training Process
 
-I used the data from Udacity. I filter out the data points which speed is less than 20. 
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-
-I added the left and right camera data into the training with a 0.25 steer degree offset. Then I mirrored all the data to get another full data set. I finally randomly shuffled the data set and put 10% of the data into a validation set and 10% of the data into a test set.
+I used the data from Udacity, it has 8640 number of data points. I filter out the data points which speed is less than 20. I also used the left and right pictures. Then I mirrored all the picture and steer angle to generate one more set of all the data points. I finally randomly shuffled the data set and put 10% of the data into a validation set and 10% of the data into a test set.
