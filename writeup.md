@@ -68,6 +68,7 @@ I started the project from this [github repo](https://github.com/dolaameng/Udaci
 
 I originally tried the VGG16 pretrained approach and run the training with 20 epoches only using the center image, this model gave a pretty good starting point, but the turning steer seems to be not sharp enough and the car will drive out of the road after the bridge in the first track. I looked at the plot between the real steer angle and predict steer angle:
 ![VGG16 with 20 epochs using only center images](https://github.com/yyporsche/CarND-Behavioral-Cloning/blob/master/pics/inspection_vgg_ori_epoch_20.png)
+
 This definitely showed that the predicted steer angle is softer(smaller) than the real steer angle. I think it is because the data has more data with smaller steer angle so that the model is biased.
 
 This is how I designed the model. More further training will be mentioned below in section 3.
